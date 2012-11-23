@@ -20,6 +20,7 @@ import android.app.ActivityManager;
 import com.android.internal.app.IBatteryStats;
 import com.android.server.LocalServices;
 import com.android.server.am.BatteryStatsService;
+import com.android.server.lights.LightsManager;
 import com.android.server.policy.WindowManagerPolicy;
 
 import android.animation.Animator;
