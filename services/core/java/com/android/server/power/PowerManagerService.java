@@ -113,6 +113,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.android.internal.util.custom.NavbarUtils;
+
 /**
  * The power manager service is responsible for coordinating power management
  * functions on the device.
@@ -687,6 +689,8 @@ public final class PowerManagerService extends SystemService
     private SensorEventListener mProximityListener;
     private android.os.PowerManager.WakeLock mProximityWakeLock;
 
+    private boolean mForceNavbar;
+
     public PowerManagerService(Context context) {
         super(context);
         mContext = context;
@@ -890,6 +894,9 @@ public final class PowerManagerService extends SystemService
         resolver.registerContentObserver(Settings.System.getUriFor(
                 Settings.System.BUTTON_BACKLIGHT_ONLY_WHEN_PRESSED),
                 false, mSettingsObserver, UserHandle.USER_ALL);
+        resolver.registerContentObserver(Settings.System.getUriFor(
+                Settings.System.NAVIGATION_BAR_SHOW),
+                false, mSettingsObserver, UserHandle.USER_ALL);
 
         IVrManager vrManager = (IVrManager) getBinderService(Context.VR_SERVICE);
         if (vrManager != null) {
@@ -1030,6 +1037,8 @@ public final class PowerManagerService extends SystemService
         mProximityWakeEnabled = Settings.System.getInt(resolver,
                 Settings.System.PROXIMITY_ON_WAKE,
                 mProximityWakeEnabledByDefaultConfig ? 1 : 0) == 1;
+
+        mForceNavbar = NavbarUtils.isEnabled(mContext);
 
         mDirty |= DIRTY_SETTINGS;
     }
@@ -2058,7 +2067,7 @@ public final class PowerManagerService extends SystemService
                             if (mButtonBrightnessOverrideFromWindowManager >= 0) {
                                 buttonBrightness = mButtonBrightnessOverrideFromWindowManager;
                             } else {
-                                buttonBrightness = mButtonBrightness;
+                                buttonBrightness = !mForceNavbar ? mButtonBrightness : 0;
                             }
 
                             mLastButtonActivityTime = mButtonLightOnKeypressOnly ?
