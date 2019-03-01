@@ -260,10 +260,6 @@ public class DreamBackend {
         logd("launchSettings(%s)", dreamInfo);
         if (dreamInfo == null || dreamInfo.settingsComponentName == null) {
             return;
-        Intent dreamIntent = new Intent();
-        dreamIntent.setComponent(dreamInfo.settingsComponentName);
-        dreamIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(dreamIntent);
         }
         uiContext.startActivity(new Intent().setComponent(dreamInfo.settingsComponentName));
     }
