@@ -67,7 +67,7 @@ public class QuickStepController implements GestureHelper {
     private static final float TRACK_SCALE = 0.95f;
     private static final float GRADIENT_WIDTH = .75f;
 
-    private NavigationBarView mNavigationBarView;
+    public NavigationBarView mNavigationBarView;
 
     private boolean mQuickScrubActive;
     private boolean mAllowGestureDetection;
