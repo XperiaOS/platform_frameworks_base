@@ -897,38 +897,6 @@ public class SignalStrength implements Parcelable {
                 + rsrpIconLevel + " snrIconLevel:" + snrIconLevel
                 + " lteRsrpBoost:" + mLteRsrpBoost);
 
-        /* Valid values are (0-63, 99) as defined in TS 36.331 */
-        // TODO the range here is probably supposed to be (0..31, 99). It's unclear if anyone relies
-        // on the current incorrect range check, so this will be fixed in a future release with more
-        // soak time
-        if (mLteSignalStrength > 63) rssiIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-        else if (mLteSignalStrength >= 12) rssiIconLevel = SIGNAL_STRENGTH_GREAT;
-        else if (mLteSignalStrength >= 8) rssiIconLevel = SIGNAL_STRENGTH_GOOD;
-        else if (mLteSignalStrength >= 5) rssiIconLevel = SIGNAL_STRENGTH_MODERATE;
-        else if (mLteSignalStrength >= 0) rssiIconLevel = SIGNAL_STRENGTH_POOR;
-
-        if (DBG) log("getLTELevel - rssi:" + mLteSignalStrength + " rssiIconLevel:"
-                + rssiIconLevel);
-
-        if("rsrp".equals(method)) {
-            if(rsrpIconLevel == -1) rsrpIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-            return rsrpIconLevel;
-        }
-        if("rssnr".equals(method)) {
-            if(snrIconLevel == -1) snrIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-            return snrIconLevel;
-        }
-        if("rssi".equals(method)) {
-            if(rssiIconLevel == -1) rssiIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
-            return rssiIconLevel;
-
-        boolean rssnrIgnored = Resources.getSystem().getBoolean(
-                com.android.internal.R.bool.config_ignoreRssnrSignalLevel);
-        if (rssnrIgnored) {
-            // Ignore RSSNR
-            if (rsrpIconLevel != -1) return rsrpIconLevel;
-        }
-
         /* Choose a measurement type to use for notification */
         if (snrIconLevel != -1 && rsrpIconLevel != -1) {
             /*
